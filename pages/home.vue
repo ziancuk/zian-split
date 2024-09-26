@@ -50,26 +50,8 @@ export default {
       activeIndex: 0,
     };
   },
-  mounted() {
-    this.startAutoSlide();
-  },
-  beforeDestroy() {
-    this.stopAutoSlide();
-  },
   methods: {
-    startAutoSlide() {
-      this.slideInterval = setInterval(() => {
-        this.activeIndex = (this.activeIndex + 1) % this.slides.length;
-      }, 3000); // Change slide every 3 seconds
-    },
-    stopAutoSlide() {
-      clearInterval(this.slideInterval);
-    },
-    setActiveSlide(index) {
-      this.activeIndex = index;
-      this.stopAutoSlide(); // Optional: Stop auto slide when manually selecting a slide
-      this.startAutoSlide(); // Restart auto slide after manual selection
-    },
+    
   },
 };
 </script>

@@ -62,12 +62,17 @@
                     <h2 class="text-xl font-bold mb-4">Camera</h2>
                     <!-- Loading Icon -->
                     <div v-if="isLoading" class="flex justify-center">
-                    <div class="loader"></div>
+                      <div class="loader"></div>
                     </div>
-                    <!-- Camera View -->
-                    <video v-show="!isLoading" ref="video" class="w-full h-auto" autoplay></video>
+                    <div v-if="errorMessage" class="error-message text-red-700">
+                        {{ errorMessage }}
+                    </div>
+                    <div v-if="!errorMessage">
+                      <!-- Camera View -->
+                      <video v-show="!isLoading" ref="video" class="w-full h-auto" autoplay></video>
+                    </div>
                     <div class="mt-4 flex justify-end">
-                    <button @click="closeCameraModal" class="bg-customGreen text-white px-4 py-2 rounded hover:bg-gray-700">Close</button>
+                      <button @click="closeCameraModal" class="bg-customGreen text-white px-4 py-2 rounded hover:bg-gray-700">Close</button>
                     </div>
                 </div>
             </div>
@@ -115,6 +120,7 @@ export default {
       isLoading: false,  // Added isLoading variable
       selectedFile: null, // Stores the selected file
       selectedImage: null,  // New property to hold the image data URL
+      errorMessage: '',
     };
   },
   methods: {
@@ -162,15 +168,17 @@ export default {
         this.$refs.video.srcObject = stream;
         this.isLoading = false; // Hide loading icon once the stream is ready
       } catch (error) {
-        console.error('Error accessing camera: ', error);
+        this.errorMessage = 'Failed to access the camera. Please check your permissions or try a different browser.';
         this.isLoading = false;
       }
     },
     stopCamera() {
-      const stream = this.$refs.video.srcObject;
-      if (stream) {
-        const tracks = stream.getTracks();
-        tracks.forEach(track => track.stop());
+      if(this.$refs.video) {
+        const stream = this.$refs.video.srcObject;
+        if (stream) {
+          const tracks = stream.getTracks();
+          tracks.forEach(track => track.stop());
+        }
       }
     },
   },
