@@ -1,15 +1,16 @@
 <template>
     <div class="mobile-view flex h-screen bg-customGreen flex-col items-center">
-      <div class="px-6 py-8 text-left w-full">
-        <span class="text-3xl mb-1 font-sans tracking-tight font-semibold text-white">
+      <div class="px-3 py-8 text-left w-full flex justify-content">
+        <svg xmlns="http://www.w3.org/2000/svg" @click="goBack" width="2.2em" height="2.2em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" class="text-white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l6 6m-6-6l6-6"/></svg>
+        <span class="text-2xl pl-2 font-sans tracking-tight font-semibold text-white">
             Select Type
         </span>
       </div>
       <div class="w-full bg-white" style="border-radius: 45px 45px 0px 0px ; height: 100%;">
         <!-- content on body -->
-        <div class="flex flex-col justify-content items-center p-3">
+        <div class="flex flex-col justify-content items-center p-5">
             <!-- Take A Picture Card -->
-            <div @click="openCameraModal" class="w-full m-4 bg-white rounded-lg shadow-md flex hover:bg-gray-300 cursor-pointer">
+            <div @click="openCameraModal" class="w-full m-4 bg-white rounded-lg border-[0.5px] flex hover:bg-gray-300 cursor-pointer">
                 <div class="grid grid-cols-3 gap-4">
                     <div class="p-2 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="170" height="120" viewBox="0 0 24 24">
@@ -26,7 +27,7 @@
             </div>
 
             <!-- Select Image Card -->
-            <div @click="openFileModal" class="w-full m-4 bg-white rounded-lg shadow-md flex hover:bg-gray-300 cursor-pointer">
+            <div @click="openFileModal" class="w-full m-4 bg-white rounded-lg border-[0.5px] flex hover:bg-gray-300 cursor-pointer">
                 <div class="grid grid-cols-3 gap-4">
                     <div class="p-2 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="170" height="120" viewBox="0 0 24 24">
@@ -41,9 +42,9 @@
                     </div>
                 </div>
             </div>
-          <router-link to="/bill">
+            <div class="w-full m-4 bg-white rounded-lg border-[0.5px] flex hover:bg-gray-300 cursor-pointer">
+            <router-link to="/bill">
 
-            <div class="w-full m-4 bg-white rounded-lg shadow-md flex hover:bg-gray-300 cursor-pointer">
                 <div class="grid grid-cols-3 gap-4">
                     <div class="p-2 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="170" height="120" viewBox="0 0 24 24">
@@ -57,8 +58,8 @@
                         </div>
                     </div>
                 </div>
+              </router-link>
             </div>
-          </router-link>
             <!-- Camera Modal -->
             <div v-if="isCameraModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 md:w-1/2">
@@ -74,6 +75,11 @@
                       <!-- Camera View -->
                       <video v-show="!isLoading" ref="video" class="w-full h-auto" autoplay></video>
                     </div>
+
+                    <!-- Take Picture Button (only if no errorMessage) -->
+                    <div v-if="errorMessage" class="mt-4 flex justify-end">
+                      <button @click="takePicture" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Take Picture</button>
+                    </div>
                     <div class="mt-4 flex justify-end">
                       <button @click="closeCameraModal" class="bg-customGreen text-white px-4 py-2 rounded hover:bg-gray-700">Close</button>
                     </div>
@@ -82,28 +88,42 @@
 
             <!-- File Selection Modal -->
             <div v-if="isFileModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 md:w-1/2">
+              <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 md:w-1/2">
                 <h2 class="text-xl font-bold mb-4">Select Image</h2>
-                <!-- Loading Icon -->
-                <div v-if="isLoading" class="flex justify-center">
-                <div class="loader"></div>
-                </div>
-                <!-- File Input -->
-                <input type="file" ref="fileInput" accept="image/*" @change="handleFileChange" class="hidden"/>
-                <p v-if="selectedFile && !isLoading" class="text-gray-600">Selected File: {{ selectedFile.name }}</p>
-                
-                <!-- Display the selected image -->
-                <div v-if="selectedImage" class="mt-4 flex justify-center">
-                <img :src="selectedImage" alt="Selected Image" class="max-w-full max-h-64 rounded-lg" />
+
+                <div class="flex items-center justify-center w-full" v-if="!selectedImage">
+                  <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                      <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                      </svg>
+                      <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                        <span class="font-semibold">Click to upload</span> or drag and drop
+                      </p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG</p>
+                    </div>
+                    <input id="dropzone-file" type="file" @change="onFileSelected" class="hidden" />
+                  </label>
                 </div>
 
-                <div class="mt-4 flex justify-end">
-                <router-link to="/bill">
-                  <button class="bg-customGreen text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Upload</button>
-                </router-link>
-                <button @click="closeFileModal" class="bg-gray-400 text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Close</button>
+                <!-- Show selected image and remove button -->
+                <div v-if="selectedImage" class="relative">
+                  <img :src="selectedImage" alt="Selected" class="w-full h-64 object-cover rounded-lg" />
+                  <button @click="removeImage" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2">
+                    ✕
+                  </button>
                 </div>
-            </div>
+
+                <!-- Conditionally show the Upload button only if there is a selected image -->
+                  <div class="mt-4 flex justify-end">
+                    <div v-if="selectedImage">
+                      <router-link to="/bill">
+                        <button class="bg-customGreen text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Upload</button>
+                      </router-link>
+                    </div>
+                    <button @click="closeFileModal" class="bg-gray-400 text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Close</button>
+                  </div>
+              </div>
             </div>
         </div>
         <div class="fixed bottom-0 left-0 right-0 py-4 text-center ">
@@ -140,31 +160,24 @@ export default {
       this.stopCamera();  // Stop the camera when closing the modal
     },
     openFileModal() {
-      this.isLoading = true;  // Set loading to true when opening file selection
       this.isFileModalOpen = true;
-
-      // Simulate file selection delay
-        this.isLoading = false;  // Stop loading after 2 seconds (simulate file ready)
-        // Trigger the file input when the modal is opened
-        this.$nextTick(() => {
-            this.$refs.fileInput.click();
-        });
+     
+    },
+    onFileSelected(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.selectedImage = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    removeImage() {
+      this.selectedImage = null;
     },
     closeFileModal() {
       this.isFileModalOpen = false;
-    },
-    handleFileChange(event) {
-        const file = event.target.files[0];
-        if (file) {
-        this.selectedFile = file;
-
-        // Create a FileReader to read the file
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.selectedImage = e.target.result; // Set the image data URL
-        };
-        reader.readAsDataURL(file);
-        }
     },
     async startCamera() {
       try {
@@ -186,6 +199,9 @@ export default {
         }
       }
     },
+    goBack() {
+      this.$router.back(); // This navigates to the previous page
+    }
   },
 };
 </script>

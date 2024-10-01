@@ -1,9 +1,12 @@
 <template>
     <div class="mobile-view flex h-screen bg-customGreen flex-col items-center">
       <div class="w-full bg-white h-full">
+        <div class="flex flex-col pt-3 px-3">
+          <svg xmlns="http://www.w3.org/2000/svg" @click="goBack" width="2.2em" height="2.2em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l6 6m-6-6l6-6"/></svg>
+        </div>
         <!-- content on body -->
         <div class="flex flex-col p-6">
-            <div class="py-5">
+            <div class="pb-5">
                 <div class="text-xl font-sans font-semibold text-gray-700">Detail yang terbaca</div>
                 <div class="text-sm font-sans font-semibold text-gray-500">Pastikan semua detail sudah terbaca dengan benar</div>
             </div>
@@ -78,72 +81,13 @@
 export default {
   data() {
     return {
-    isCameraModalOpen: false,
-      isFileModalOpen: false,
-      isLoading: false,  // Added isLoading variable
-      selectedFile: null, // Stores the selected file
-      selectedImage: null,  // New property to hold the image data URL
-      errorMessage: '',
+    
     };
   },
   methods: {
-    openCameraModal() {
-      this.isLoading = true;  // Set loading to true when opening the camera
-      this.isCameraModalOpen = true;
-
-        this.startCamera();  // Start the camera after 2 seconds (simulate camera initialization)
-    },
-    closeCameraModal() {
-      this.isCameraModalOpen = false;
-      this.stopCamera();  // Stop the camera when closing the modal
-    },
-    openFileModal() {
-      this.isLoading = true;  // Set loading to true when opening file selection
-      this.isFileModalOpen = true;
-
-      // Simulate file selection delay
-        this.isLoading = false;  // Stop loading after 2 seconds (simulate file ready)
-        // Trigger the file input when the modal is opened
-        this.$nextTick(() => {
-            this.$refs.fileInput.click();
-        });
-    },
-    closeFileModal() {
-      this.isFileModalOpen = false;
-    },
-    handleFileChange(event) {
-        const file = event.target.files[0];
-        if (file) {
-        this.selectedFile = file;
-
-        // Create a FileReader to read the file
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.selectedImage = e.target.result; // Set the image data URL
-        };
-        reader.readAsDataURL(file);
-        }
-    },
-    async startCamera() {
-      try {
-        this.isLoading = true; // Show loading icon
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        this.$refs.video.srcObject = stream;
-        this.isLoading = false; // Hide loading icon once the stream is ready
-      } catch (error) {
-        this.errorMessage = 'Failed to access the camera. Please check your permissions or try a different browser.';
-        this.isLoading = false;
-      }
-    },
-    stopCamera() {
-      if(this.$refs.video) {
-        const stream = this.$refs.video.srcObject;
-        if (stream) {
-          const tracks = stream.getTracks();
-          tracks.forEach(track => track.stop());
-        }
-      }
-    },
+    goBack() {
+      this.$router.back(); // This navigates to the previous page
+    }
   },
 };
 </script>

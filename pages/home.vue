@@ -2,9 +2,9 @@
     <div class="mobile-view flex h-screen bg-customGreen flex-col items-center">
       <div class="px-6 py-10 text-left w-full">
         <span class="text-3xl mb-1 font-sans tracking-tight font-semibold text-white">
-            Good Morning
+            Hai,
         </span>
-        <p class="text-md font-sans text-white">How are you today?</p>
+        <p class="text-md font-sans text-white">Apa Kabar?</p>
       </div>
       <div class="w-full bg-white" style="border-radius: 55px 55px 0px 0px ; height: 100%;">
         <!-- content on body -->
@@ -15,18 +15,23 @@
         </div>
         <div class="p-4 text-center">
           <span class="text-3xl mb-1 font-sans tracking-tight font-semibold text-gray-700">
-            Your fresh and green comfortable <span style="color: #75A488;">place</span>
+            Apa fungsi Web Aplikasi ini?
+          </span>
+        </div>
+        <div class="p-4 text-center">
+          <span class="text-xl mb-1 font-sans tracking-tight font-normal text-gray-700">
+            Web Aplikasi ini dapat membagi bill secara rata dari <span style="color: #75A488;">Harga</span> atau membagi bill berdasarkan <span style="color: #75A488;">Item</span> .
           </span>
         </div>
         <div class="flex justify-content items-center p-3">
           <router-link to="/price">
-            <div class="w-40 h-40 m-4 lex flex-col bg-white rounded-3xl shadow-lg flex items-center justify-center hover:bg-gray-200">
+            <div class="w-40 h-40 m-4 lex flex-col bg-white rounded-3xl border-[0.2px] flex items-center justify-center hover:bg-gray-200">
               <img src="/public/images/icon_price.png" alt="Top Image" class="mx-auto">
               <span class="p-3">Price</span>
             </div>
           </router-link>
           <router-link to="/item">
-            <div class="w-40 h-40 m- lex flex-col 4 bg-white rounded-3xl shadow-lg flex items-center justify-center hover:bg-gray-200">
+            <div class="w-40 h-40 m- lex flex-col 4 bg-white rounded-3xl border-[0.2px] flex items-center justify-center hover:bg-gray-200">
               <img src="/public/images/icon_item.png" alt="Top Image" class="mx-auto">
               <span class="p-3">Item</span>
             </div>
