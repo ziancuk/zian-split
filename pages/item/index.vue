@@ -41,6 +41,8 @@
                     </div>
                 </div>
             </div>
+          <router-link to="/bill">
+
             <div class="w-full m-4 bg-white rounded-lg shadow-md flex hover:bg-gray-300 cursor-pointer">
                 <div class="grid grid-cols-3 gap-4">
                     <div class="p-2 flex items-center justify-center">
@@ -56,6 +58,7 @@
                     </div>
                 </div>
             </div>
+          </router-link>
             <!-- Camera Modal -->
             <div v-if="isCameraModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg w-4/5 md:w-1/2">
@@ -95,7 +98,9 @@
                 </div>
 
                 <div class="mt-4 flex justify-end">
-                <button @click="closeFileModal" class="bg-customGreen text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Upload</button>
+                <router-link to="/bill">
+                  <button class="bg-customGreen text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Upload</button>
+                </router-link>
                 <button @click="closeFileModal" class="bg-gray-400 text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Close</button>
                 </div>
             </div>
