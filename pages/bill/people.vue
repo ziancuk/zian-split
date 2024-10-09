@@ -53,9 +53,12 @@
             </div>
           </div>
           <div class="row">
-            <router-link to="/bill/assign">
-              <button type="button" class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">NEXT</button>
-            </router-link>
+            <button 
+              @click="saveUsersAndRedirect"
+              type="button" 
+              class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">
+              NEXT
+            </button>
           </div>
         </div>
         <div class="fixed bottom-0 left-0 right-0 py-4 text-center ">
@@ -80,7 +83,19 @@ export default {
     };
   },
   methods: {
-    addUser() {
+      addUser() {
+      // Check if there is any user with an empty name
+      const hasEmptyName = this.users.some(user => user.name.trim() === '');
+
+      if (hasEmptyName) {
+        // Show SweetAlert if the previous user's name is not filled in
+        Swal.fire({
+          icon: 'error',
+          title: 'Name Required',
+          text: 'Please enter a name before adding another friend.',
+        });
+        return;
+      }
 
       if (this.users.length >= 14) {
         // Show SweetAlert if the limit is reached
@@ -91,6 +106,7 @@ export default {
         });
         return;
       }
+
       // Assign a new icon from the emoticon list (cycling through it)
       const icon = this.emoticons[this.iconIndex];
       this.iconIndex = (this.iconIndex + 1) % this.emoticons.length; // Update index in a loop
@@ -113,6 +129,24 @@ export default {
       // Generate a random hex color
       const hex = Math.floor(Math.random() * 0xffffff).toString(16);
       return `#${hex.padStart(6, '0')}`;  // Ensure 6-digit hex
+    },
+    saveUsersAndRedirect() {
+      // Check if all users have names filled
+      const hasEmptyName = this.users.some(user => user.name.trim() === '');
+      if (hasEmptyName) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Name Required',
+          text: 'Please fill in all names before proceeding.',
+        });
+        return;
+      }
+
+      // Save users to localStorage
+      localStorage.setItem('users', JSON.stringify(this.users));
+
+      // Redirect to bill/assign
+      this.$router.push('/bill/assign');
     }
   },
 };

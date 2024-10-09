@@ -1,155 +1,216 @@
 <template>
-    <div class="mobile-view flex h-screen bg-customGreen flex-col items-center">
-      <div class="w-full bg-white h-full">
-        <!-- content on body -->
-        <div class="p-6">
-          <div class="py-5 flex flex-col">
-            <div class="text-2xl font-sans font-bold text-gray-700">Add item</div>
-            <div class="text-sm font-sans font-semibold text-gray-500">items after tapping a friend</div>
-          </div>
-          <!-- Dynamic User Avatars -->
-          <div class="flex overflow-x-auto space-x-4 my-4">
-            <div v-for="(user, index) in users" :key="index" class="relative">
-              <!-- Dynamic Icon with Random Background Color -->
-                <div class="py-4">
-                  <div 
-                    class="w-16 h-16 flex items-center justify-center rounded-full border-2 border-white"
-                    :style="{ backgroundColor: user.bgColor }"
-                  >
-                    <span class="text-3xl">{{ user.icon }}</span>
-                  </div>
-  
-                  <!-- User Name -->
-                  <input 
-                    v-model="user.name" 
-                    class="mt-2 text-center text-sm focus:outline-none w-full"
-                    placeholder="Enter name" disabled
-                  />
+  <div class="mobile-view flex h-screen bg-customGreen flex-col items-center">
+    <div class="w-full bg-white h-full">
+      <!-- Content on body -->
+      <div class="p-6">
+        <div class="py-1 flex flex-col">
+          <div class="text-2xl font-sans font-bold text-gray-700">Add item</div>
+          <div class="text-sm font-sans font-semibold text-gray-500">Items after tapping a friend</div>
+        </div>
+
+        <!-- Dynamic User Avatars -->
+        <div class="flex overflow-x-auto space-x-4 my-4">
+          <div v-for="(user, index) in users" :key="index" class="relative">
+            <div>
+              <!-- Avatar with green border when active -->
+              <div
+                :class="['w-16 h-16 flex items-center justify-center rounded-full border-2', activeUserIndex === index ? 'border-green-500' : 'border-white']"
+                :style="{ backgroundColor: user.bgColor }"
+                @click="selectUser(index)"
+              >
+                <span class="text-3xl">{{ user.icon }}</span>
               </div>
+
+              <!-- User Name -->
+              <input
+                v-model="user.name"
+                class="mt-2 text-left text-sm focus:outline-none w-full"
+                placeholder="Enter name"
+                disabled
+              />
             </div>
-          </div>
-          <div class="py-4">
-            <hr class="h-px my-3 bg-gray-200 border-0 dark:bg-gray-300">
-            <div class="py-1">
-              <div class="grid grid-cols-2 gap-4 py-2 pb-4">
-                <span class="font-sans font-bold text-gray-700">Ayam idup *</span>
-                <div class="text-right">
-                    <input checked id="green-checkbox" type="checkbox" value="" class="w-4 h-4 bg-customGreen border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 ">
-                    <label for="green-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"></label>
-                </div>
-                <div class="grid grid-cols-6 gap-4 py-2 pb-4">
-                  <div class="col-span-3">-</div>
-                  <div class="text-gray-400 font-semibold">2x</div>
-                  <div class="col-span-2 text-right font-sans font-bold">36,364</div>
-                </div>
-              </div>
-              <div 
-                  class="w-11 h-11 flex items-center justify-center rounded-full border-2 border-white"
-                  :style="{ backgroundColor: '#AA22E5' }"
-                >
-                  <span class="text-xl">🐸</span>
-              </div>
-            </div>
-            <hr class="h-px my-3 bg-gray-200 border-0 dark:bg-gray-300">
-            <div class="py-1">
-              <div class="grid grid-cols-2 gap-4 py-2 pb-4">
-                <span class="font-sans font-bold text-gray-700">Ayam idup *</span>
-                <div class="text-right">
-                    <input checked id="green-checkbox" type="checkbox" value="" class="w-4 h-4 bg-customGreen border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 ">
-                    <label for="green-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"></label>
-                </div>
-              </div>
-              <div class="grid grid-cols-6 gap-4 py-2 pb-4">
-                <div class="col-span-3">-</div>
-                <div class="text-gray-400 font-semibold">2x</div>
-                <div class="col-span-2 text-right font-sans font-bold">36,364</div>
-              </div>
-            </div>
-            <hr class="h-px my-3 bg-gray-200 border-0 dark:bg-gray-300">
-            <div class="py-1">
-              <div class="grid grid-cols-2 gap-4 py-2 pb-4">
-                <span class="font-sans font-bold text-gray-700">Ayam idup *</span>
-                <div class="text-right">
-                    <input checked id="green-checkbox" type="checkbox" value="" class="w-4 h-4 bg-customGreen border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 ">
-                    <label for="green-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"></label>
-                </div>
-              </div>
-              <div class="grid grid-cols-6 gap-4 py-2 pb-4">
-                <div class="col-span-3">-</div>
-                <div class="text-gray-400 font-semibold">2x</div>
-                <div class="col-span-2 text-right font-sans font-bold">36,364</div>
-              </div>
-            </div>
-            <hr class="h-px my-3 bg-gray-200 border-0 dark:bg-gray-300">
-                <div class="grid grid-cols-2 gap-4">
-                  <div class="text-gray-800 font-sans font-semibold">Subtotal</div>
-                  <div class="text-right font-sans font-bold">69,090</div>
-                  <div class="text-gray-800 font-sans font-semibold">Pajak</div>
-                  <div class="text-right font-sans font-bold">6,909</div>
-                  <div class="text-gray-800 font-sans font-semibold">Biaya Layanan</div>
-                  <div class="text-right font-sans font-bold">0</div>
-                  <div class="text-gray-800 font-sans font-semibold">Diskon</div>
-                  <div class="text-right font-sans font-bold">0</div>
-                  <div class="text-gray-800 font-sans font-semibold">Lainnya</div>
-                  <div class="text-right font-sans font-bold">0</div>
-                  <div class="text-gray-800 font-sans font-semibold">Jumlah Total</div>
-                  <div class="text-right font-sans font-bold">76,000</div>
-                </div>
-          </div>
-          <div class="row">
-            <router-link to="/bill/print">
-              <button type="button" class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">NEXT</button>
-            </router-link>
           </div>
         </div>
-        <div class="bottom-0 left-0 right-0 py-4 text-center ">
-          <p class="text-gray-600">© 2024 Ziancuks. All rights reserved.</p>
-          <div class="flex justify-center space-x-4 mt-2">
+
+        <!-- Bill Items Section -->
+        <div v-for="(row, index) in rows" :key="index" class="pb-2">
+          <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-300">
+          <div class="py-1">
+            <div class="grid grid-cols-2 gap-4 py-2 pb-4">
+              <span class="font-sans font-bold text-gray-700">{{ row.item }} *</span>
+              <div class="text-right">
+                <input
+                  type="checkbox"
+                  class="w-4 h-4 bg-customGreen border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600"
+                  :checked="row.selectedUsers.includes(activeUserIndex)"
+                  @change="toggleCheckbox(index)"
+                />
+              </div>
+            </div>
+            <div class="grid grid-cols-6 gap-4 py-1">
+              <div class="col-span-3"></div>
+              <div class="text-gray-400 font-semibold">{{ row.quantity }}x</div>
+              <div class="col-span-2 text-right font-sans font-bold">{{ row.price.toLocaleString() }}</div>
+            </div>
+
+            <!-- Display selected avatars for each checked item -->
+            <div v-if="row.selectedUsers.length > 0" class="flex space-x-2">
+              <div v-for="userIndex in row.selectedUsers" :key="userIndex" 
+                   class="w-11 h-11 flex items-center justify-center rounded-full border-2 border-white"
+                   :style="{ backgroundColor: users[userIndex].bgColor }">
+                <span class="text-xl">{{ users[userIndex].icon }}</span>
+              </div>
+            </div>
           </div>
+        </div>
+            
+        <!-- Summary Section -->
+        <hr class="h-px my-3 bg-gray-200 border-0 dark:bg-gray-300">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-gray-800 font-sans font-semibold">Subtotal</div>
+          <div class="text-right font-sans font-bold">{{ subtotal.toLocaleString() }}</div>
+
+          <div class="text-gray-800 font-sans font-semibold">Pajak</div>
+          <div class="text-right font-sans font-bold">{{ tax.toLocaleString() }}</div>
+
+          <div class="text-gray-800 font-sans font-semibold">Biaya Layanan</div>
+          <div class="text-right font-sans font-bold">{{ additionalFee.toLocaleString() }}</div>
+
+          <div class="text-gray-800 font-sans font-semibold">Diskon</div>
+          <div class="text-right font-sans font-bold">{{ diskon.toLocaleString() }}</div>
+
+          <div class="text-gray-800 font-sans font-semibold">Lainnya</div>
+          <div class="text-right font-sans font-bold">{{ other.toLocaleString() }}</div>
+
+          <div class="text-gray-800 font-sans font-semibold">Jumlah Total</div>
+          <div class="text-right font-sans font-bold">{{ total.toLocaleString() }}</div>
+        </div>
+
+        <div class="row py-4">
+          <router-link to="/bill/print">
+            <button type="button" class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">NEXT</button>
+          </router-link>
         </div>
       </div>
-    </div>
 
+      <div class="bottom-0 left-0 right-0 py-4 text-center ">
+        <p class="text-gray-600">© 2024 Ziancuks. All rights reserved.</p>
+        <div class="flex justify-center space-x-4 mt-2"></div>
+      </div>
+    </div>
+  </div>
 </template>
   
 <script>
 export default {
-  mounted() {
-    for(let i = 0; i < 5; i++) {
-      this.addUser();
-    }
-  },
   data() {
     return {
-      users: [],  // Start with an empty user list
-      emoticons: ["🐰", "😃", "🐸", "🐱", "🐶", "🦊", "🐼", "🐧", "🙉", "🦁", "😺", "🐷", "🐔", "🐮"], // Define your list of emoticons
-      iconIndex: 0  // Keep track of which icon to use next
+      users: [], // Start with an empty user list
+      rows: [], // Bill items
+      tax: 0,
+      additionalFee: 0,
+      diskon: 0,
+      other: 0,
+      activeUserIndex: null, // To track the currently active user
     };
   },
-  methods: {
-    addUser() {
-      // Assign a new icon from the emoticon list (cycling through it)
-      const icon = this.emoticons[this.iconIndex];
-      this.iconIndex = (this.iconIndex + 1) % this.emoticons.length; // Update index in a loop
-
-      // Generate a random hex color for background
-      const bgColor = this.getRandomHexColor();
-
-      // Add the new user to the users array
-      this.users.push({
-        name: bgColor,  // User can enter their name
-        icon: icon,  // Assign an emoticon as the user's icon
-        bgColor: bgColor  // Assign random background color
-      });
-    },
-    getRandomHexColor() {
-      // Generate a random hex color
-      const hex = Math.floor(Math.random() * 0xffffff).toString(16);
-      return `#${hex.padStart(6, '0')}`;  // Ensure 6-digit hex
+  mounted() {
+    // Retrieve the users data from localStorage when the component is mounted
+    const storedUsers = localStorage.getItem('users');
+    if (storedUsers) {
+      this.users = JSON.parse(storedUsers); // Parse and set the users data
+    } else {
+      // Initialize with some default users if localStorage is empty
+      this.users = [
+        { name: "User 1", icon: "🐶", bgColor: "#AA4421" },
+        { name: "User 2", icon: "🦁", bgColor: "#FFD700" },
+      ];
+      localStorage.setItem('users', JSON.stringify(this.users));
     }
+
+    // Retrieve the bill data (rows, tax, etc.) from localStorage
+    const savedData = localStorage.getItem('billData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      this.rows = parsedData.rows || [];
+      this.tax = parsedData.tax || 0;
+      this.additionalFee = parsedData.additionalFee || 0;
+      this.diskon = parsedData.diskon || 0;
+      this.other = parsedData.other || 0;
+    } else {
+      // Default bill items
+      this.rows = [
+        { item: "Ayam Idup", price: 45000, quantity: 2, selectedUsers: [] },
+        { item: "Nasi Goreng", price: 80000, quantity: 1, selectedUsers: [] },
+      ];
+      localStorage.setItem('billData', JSON.stringify(this.billData));
+    }
+
+    // Initialize each row's selectedUsers if not already set
+    this.rows.forEach(row => {
+      if (!row.selectedUsers) row.selectedUsers = [];
+    });
+  },
+  methods: {
+    selectUser(index) {
+      // Set the active user without removing existing avatar assignments
+      this.activeUserIndex = index;
+    },
+    toggleCheckbox(index) {
+      // Toggle the checkbox state and add/remove the active user from the selectedUsers array
+      const row = this.rows[index];
+      const userIndex = this.activeUserIndex;
+
+      if (userIndex !== null) {
+        const userExists = row.selectedUsers.includes(userIndex);
+
+        if (userExists) {
+          // If the user is already assigned, remove them
+          row.selectedUsers = row.selectedUsers.filter(id => id !== userIndex);
+        } else {
+          // Otherwise, add the user to the row
+          row.selectedUsers.push(userIndex);
+        }
+
+        // Save the updated rows to localStorage
+        this.saveBillData();
+      }
+    },
+    saveBillData() {
+      const billData = {
+        rows: this.rows,
+        tax: this.tax,
+        additionalFee: this.additionalFee,
+        diskon: this.diskon,
+        other: this.other,
+      };
+      localStorage.setItem('billData', JSON.stringify(billData));
+    },
+  },
+  computed: {
+    activeUser() {
+      return this.activeUserIndex !== null ? this.users[this.activeUserIndex] : null;
+    },
+    subtotal() {
+      return this.rows.reduce((total, row) => total + row.quantity * row.price, 0);
+    },
+    total() {
+      return this.subtotal + this.tax + this.additionalFee - this.diskon + this.other;
+    },
+  },
+  watch: {
+    // Whenever the tax, additionalFee, discount, or other charges change, save the data
+    tax: 'saveBillData',
+    additionalFee: 'saveBillData',
+    diskon: 'saveBillData',
+    other: 'saveBillData',
   },
 };
+
 </script>
+
+
+
 
 <style scoped>
 .mobile-view {
