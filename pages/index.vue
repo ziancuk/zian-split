@@ -1,7 +1,11 @@
 <template>
     <div class="mobile-view flex h-screen bg-customGreen flex-col items-center">
         <div class="w-full bg-white" style="border-radius: 0px 0px 55px 55px; height: 90%;">
-            <img src="/public/images/split-bill.png" alt="Top Image" class="w-full h-auto">
+          <div style="display: flex; justify-content: center; align-items: center;">
+              <img src="/public/images/split-bill.png" alt="Top Image" class="h-auto" style="width: 60%;">
+          </div>
+
+            <!-- <img src="/public/images/split-bill.png" alt="Top Image" class="h-auto text-center" style="width:70%"> -->
             <!-- Carousel Wrapper -->
             <div class="p-4 relative">
                     <!-- Carousel Items -->
