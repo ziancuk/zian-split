@@ -1,23 +1,28 @@
 <template>
   <div class="mobile-view flex h-screen bg-customGreen flex-col items-center">
     <div class="w-full bg-white h-full">
-      <div class="p-6">
+      <div class="p-6" :style="{ backgroundColor: 'rgb(243 244 246/var(--tw-bg-opacity))!important' }">
         <div class="py-5 flex flex-col">
           <div class="text-xl font-sans font-semibold text-gray-500">TOTAL AMOUNT</div>
           <div class="text-3xl font-sans font-bold text-gray-700">Rp {{ total.toLocaleString() }}</div>
         </div>
         
         <div v-for="(user, userIndex) in users" :key="userIndex" class="my-4">
-          <div class="grid grid-cols-4">
-            <div class="w-16 h-16 flex items-center justify-center rounded-full border-2 border-white"
-                 :style="{ backgroundColor: user.bgColor }">
-              <span class="text-3xl">{{ user.icon }}</span>
+          <!-- <div v-for="(item, itemIndex) in getUserItems(userIndex)" :key="item.item"> -->
+            <div class="grid grid-cols-4">
+              <div class="w-16 h-16 flex items-center justify-center rounded-full border-2 border-white"
+                  :style="{ backgroundColor: user.bgColor }">
+                <span class="text-3xl">{{ user.icon }}</span>
+              </div>
+              <div class="flex flex-col col-span-3">
+                <span class="font-sans font-bold text-gray-700">{{ user.name }}</span>
+                <!-- <span class="font-sans font-bold text-gray-700 text-2xl">Rp {{ getUserTotal(userIndex).toLocaleString() }}</span> -->
+                <span class="font-sans font-bold text-gray-700 text-2xl">
+                  Rp {{ userTotals[userIndex].toLocaleString() }}
+                </span>
+              </div>
             </div>
-            <div class="flex flex-col col-span-3">
-              <span class="font-sans font-bold text-gray-700">{{ user.name }}</span>
-              <span class="font-sans font-bold text-gray-700 text-2xl">Rp {{ getUserTotal(userIndex).toLocaleString() }}</span>
-            </div>
-          </div>
+          <!-- </div> -->
 
           <hr class="h-px my-3 bg-gray-200 border-0 dark:bg-gray-300">
 
@@ -25,40 +30,42 @@
           <div v-for="(item, itemIndex) in getUserItems(userIndex)" :key="itemIndex">
             <div class="grid grid-cols-6 gap-4 py-2 pb-4">
               <div class="col-span-3 font-sans font-bold text-lg">{{ item.item }} *</div>
-              <div class="text-gray-300 font-semibold text-lg">x{{ item.quantity }}</div>
-              <div class="col-span-2 text-right font-sans font-bold text-lg">{{ (item.price * item.quantity).toLocaleString() }}</div>
+              <div class="text-gray-300 font-semibold text-lg">x{{ item.quantity >= item.selectedUsers.length ? Math.floor(item.quantity / item.selectedUsers.length) : item.quantity }}</div>
+              <div class="col-span-2 text-right font-sans font-bold text-lg">Rp {{ Math.floor(item.price * (item.quantity / item.selectedUsers.length)).toLocaleString() }}</div>
             </div>
 
-            <div class="grid grid-cols-2">
-              <div class="text-gray-300">Bill Details</div>
-              <div @click="toggleAccordion(userIndex + '-' + itemIndex)" class="cursor-pointer text-right font-sans font-bold text-lg">
-                <span :class="{ 'rotate-180': isOpen(userIndex + '-' + itemIndex) }" class="transition-transform duration-200 text-gray-300">▼</span>
+            <div v-if="itemIndex === getUserItems(userIndex).length - 1">
+              <div class="grid grid-cols-2">
+                <div class="text-gray-600">Bill Details</div>
+                <div @click="toggleAccordion(userIndex + '-' + itemIndex)" class="cursor-pointer text-right font-sans font-bold text-lg">
+                  <span :class="{ 'rotate-180': isOpen(userIndex + '-' + itemIndex) }" class="transition-transform duration-200 text-gray-300">▼</span>
+                </div>
               </div>
-            </div>
 
-            <hr class="h-px my-3 bg-gray-200 border-0 dark:bg-gray-300">
+              <hr class="h-px my-3 bg-gray-200 border-0 dark:bg-gray-300">
 
-            <!-- Accordion Content for Bill Details -->
-            <div v-if="isOpen(userIndex + '-' + itemIndex)" class="mt-2">
-              <div class="grid grid-cols-2 gap-4">
-                <div class="text-gray-500">+ Tax</div>
-                <div class="text-right">Rp {{ getUserTax(userIndex, item).toLocaleString() }}</div>
-                <div class="text-gray-500">+ Service charge</div>
-                <div class="text-right">Rp {{ additionalFee.toLocaleString() }}</div>
-                <div class="text-gray-500">+ Discounts</div>
-                <div class="text-right">Rp {{ discount.toLocaleString() }}</div>
-                <div class="text-gray-500">+ Others</div>
-                <div class="text-right">Rp {{ otherFees.toLocaleString() }}</div>
+              <!-- Accordion Content for Bill Details -->
+              <div v-if="isOpen(userIndex + '-' + itemIndex)" class="mt-2">
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="text-gray-500">+ Tax</div>
+                  <div class="text-right">Rp {{ Math.floor(getUserTax(userIndex, item)).toLocaleString() }}</div>
+                  <div class="text-gray-500">+ Service charge</div>
+                  <div class="text-right">Rp {{ Math.floor(additionalFeeUser).toLocaleString() }}</div>
+                  <div class="text-gray-500">+ Discounts</div>
+                  <div class="text-right">Rp {{ Math.floor(discount).toLocaleString() }}</div>
+                  <div class="text-gray-500">+ Others</div>
+                  <div class="text-right">Rp {{ Math.floor(otherFees).toLocaleString() }}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="py-4 grid grid-cols-2 gap-4">
-          <button type="button" class="text-white bg-gray-300 hover:bg-gray-600 font-medium rounded-lg text-sm p-5 py-2.5 me-2 mb-2 focus:outline-none w-full">Share</button>
+        <div class="py-4 text-center">
+          <!-- <button type="button" class="text-white bg-gray-300 hover:bg-gray-600 font-medium rounded-lg text-sm p-5 py-2.5 me-2 mb-2 focus:outline-none w-full">Share</button> -->
           <button type="button" class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">Copy Link</button>
         </div>
-        <div class="fixed bottom-0 left-0 right-0 py-4 text-center">
+        <div class="bottom-0 left-0 right-0 py-4 text-center">
           <p class="text-gray-600">© 2024 Ziancuks. All rights reserved.</p>
         </div>
       </div>
@@ -91,6 +98,9 @@ export default {
       // Assigning values from billData
       this.tax = Number(storedBillData.tax) || 0;
       this.additionalFee = Number(storedBillData.additionalFee) || 0;
+      this.additionalFeeUser = storedBillData.additionalFee 
+      ? Number(storedBillData.additionalFee) / (storedUsers.length || 1) 
+      : 0;
       this.discount = Number(storedBillData.diskon) || 0;
       this.otherFees = Number(storedBillData.other) || 0;
 
@@ -106,6 +116,7 @@ export default {
           this.users[userIndex].items.push(item);
         });
       });
+
     },
     getUserTotal(userIndex) {
       let userTotal = 0;
@@ -118,11 +129,19 @@ export default {
     getUserItems(userIndex) {
       return this.users[userIndex].items || [];
     },
-    getUserTax(userIndex, item) {
-      const subtotal = this.getUserTotal(userIndex);
+    getUserTax(userIndex) {
+      
+      const subtotal = this.getUserItems(userIndex).reduce((total, item) => {
+        return total + item.quantity * item.price;
+      }, 0);
       // Calculate tax based on subtotal
       return (this.tax * subtotal) / (this.getTotalWithoutTax() || 1);
     },
+    // getUserTax(userIndex, item) {
+    //   const subtotal = this.getUserTotal(userIndex);
+    //   // Calculate tax based on subtotal
+    //   return (this.tax * subtotal) / (this.getTotalWithoutTax() || 1);
+    // },
     getTotalWithoutTax() {
       let total = 0;
       this.users.forEach(user => {
@@ -130,8 +149,19 @@ export default {
       });
       return total;
     },
+    getTotalAmount() {
+      let total = 0;
+      this.users.forEach((user, index) => {
+        total += this.userTotals[index]// Example action; replace with actual logic
+      });
+      // this.users.forEach(user => {
+      //   total += user.items.reduce((sum, item) => item.quantity >= sum + (item.price), 0);
+      // });
+      return total;
+    },
     toggleAccordion(itemIdentifier) {
-      this.$set(this.accordionOpen, itemIdentifier, !this.accordionOpen[itemIdentifier]);
+      // Toggle the state by directly updating the object
+      this.accordionOpen[itemIdentifier] = !this.accordionOpen[itemIdentifier];
     },
     isOpen(itemIdentifier) {
       return !!this.accordionOpen[itemIdentifier];
@@ -139,7 +169,17 @@ export default {
   },
   computed: {
     total() {
-      return this.getTotalWithoutTax() + this.tax + this.additionalFee - this.discount + this.otherFees;
+      return this.getTotalAmount();
+    },
+    userTotals() {
+      return this.users.map((user, userIndex) => {
+        let userTotal = 0;
+        const items = this.getUserItems(userIndex);
+        items.forEach(item => {
+          userTotal += (item.quantity  / item.selectedUsers.length) * item.price;
+        });
+        return userTotal + this.getUserTax(userIndex) + this.additionalFeeUser - this.discount + this.otherFees;
+      });
     }
   },
 };

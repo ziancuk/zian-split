@@ -23,18 +23,18 @@
           <!-- Dynamic Rows -->
           <div v-for="(row, index) in rows" :key="index" class="py-1">
             <div class="flex justify-between items-center">
-              <span class="font-sans font-bold text-gray-700">{{ row.item }}</span>
-              <button @click="deleteRow(index)" class="text-red-500 text-sm">X</button>
+              <span class="font-sans font-bold text-gray-700"></span>
+              <button @click="deleteRow(index)" class="text-red-500 text-lg"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m5.4 21L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z"/></svg></button>
             </div>
             <div class="grid grid-cols-6 gap-4 py-2 pb-4">
               <div class="col-span-3">
                 <input v-model="row.item" type="text" class="w-full border border-gray-300 p-2 rounded" />
               </div>
               <div>
-                <input v-model="row.quantity" type="number" class="w-full border border-gray-300 p-2 rounded" />
+                <input v-model="row.quantity" type="number" min="1" class="w-full border border-gray-300 p-2 rounded" />
               </div>
               <div class="col-span-2 text-right">
-                <input v-model="row.price" type="number" class="w-full border border-gray-300 p-2 rounded text-right" />
+                <input v-model="row.price" type="number" min="0" class="w-full border border-gray-300 p-2 rounded text-right" />
               </div>
             </div>
             <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-300">
@@ -50,32 +50,32 @@
           <div class="grid grid-cols-2 gap-4 mt-4">
             <div class="text-gray-400 font-sans font-semibold">Subtotal</div>
             <div class="text-right font-sans font-bold">
-              <input type="number" v-model="subtotal" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" disabled/>
+              <input type="number" min="0" v-model="subtotal" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" disabled/>
             </div>
 
             <div class="text-gray-400 font-sans font-semibold">Pajak</div>
             <div class="text-right font-sans font-bold">
-              <input type="number" v-model="tax" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" />
+              <input type="number" min="0" v-model="tax" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" />
             </div>
 
             <div class="text-gray-400 font-sans font-semibold">Biaya Layanan</div>
             <div class="text-right font-sans font-bold">
-              <input type="number" v-model="additionalFee" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" />
+              <input type="number" min="0" v-model="additionalFee" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" />
             </div>
 
             <div class="text-gray-400 font-sans font-semibold">Diskon</div>
             <div class="text-right font-sans font-bold">
-              <input type="number" v-model="diskon" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" />
+              <input type="number" min="0" v-model="diskon" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" />
             </div>
 
             <div class="text-gray-400 font-sans font-semibold">Lainnya</div>
             <div class="text-right font-sans font-bold">
-              <input type="number" v-model="other" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" />
+              <input type="number" min="0" v-model="other" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" />
             </div>
 
             <div class="text-gray-400 font-sans font-semibold">Jumlah Total</div>
             <div class="text-right font-sans font-bold">
-              <input type="number" v-model="total" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" disabled/>
+              <input type="number" min="0" v-model="total" class="w-full text-right bg-transparent focus:outline-none border-b-2 border-gray-200" disabled/>
 
             </div>
           </div>
@@ -109,7 +109,7 @@ export default {
       rows: [
 
       ],
-      tax: 0,
+      // tax: 0,
       additionalFee: 0,
       diskon: 0,
       other: 0,
@@ -124,6 +124,7 @@ export default {
       return this.subtotal * 0.1; // 10% tax
     },
     total() {
+      console.log(this.tax)
       return this.subtotal + this.tax + this.additionalFee - this.diskon + this.other;
     },
     formattedDateTime() {
@@ -139,8 +140,11 @@ export default {
     },
   },
   mounted() {
+    localStorage.clear();
+
     const savedData = localStorage.getItem('billData');
-    if (savedData) {
+    if (savedData && savedData != 'undefined') {
+      console.log(savedData)
       const parsedData = JSON.parse(savedData);
       this.rows = parsedData.rows;
       this.tax = parsedData.tax;
