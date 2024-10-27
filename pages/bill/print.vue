@@ -100,7 +100,8 @@ export default {
   methods: {
     copyLink() {
       const url = window.location.href; // Get the current URL
-      navigator.clipboard.writeText(url) // Copy the URL to the clipboard
+      const textToCopy = `Show your split bill at: ${url}`; // Create the text to copy
+      navigator.clipboard.writeText(textToCopy) // Copy the URL to the clipboard
         .then(() => {
           Swal.fire({
           icon: 'success',
