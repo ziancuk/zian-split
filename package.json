@@ -10,8 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "firebase": "^11.0.1",
     "nuxt": "^3.13.0",
     "sweetalert2": "^11.14.1",
+    "uuid": "^10.0.0",
     "vue": "latest",
     "vue-router": "latest"
   },

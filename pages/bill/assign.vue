@@ -87,9 +87,15 @@
         </div>
 
         <div class="row py-4">
-          <router-link to="/bill/print">
+          <!-- <router-link to="/bill/print">
             <button type="button" class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">NEXT</button>
-          </router-link>
+          </router-link> -->
+          <button 
+              @click="savePrintData"
+              type="button" 
+              class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">
+              NEXT
+            </button>
         </div>
       </div>
 
@@ -102,10 +108,16 @@
 </template>
   
 <script>
+// import { db } from '~/plugins/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid'; // Import the UUID function
+import Swal from 'sweetalert2';
+
 export default {
   data() {
     return {
       users: [], // Start with an empty user list
+      billData: {}, // Initialize billData as an object or as needed
       rows: [], // Bill items
       tax: 0,
       additionalFee: 0,
@@ -177,15 +189,45 @@ export default {
       }
     },
     saveBillData() {
-      const billData = {
+      this.billData = {
         rows: this.rows,
         tax: this.tax,
         additionalFee: this.additionalFee,
         diskon: this.diskon,
         other: this.other,
       };
-      localStorage.setItem('billData', JSON.stringify(billData));
+      // try {
+      //   const docRef = await addDoc(collection(db, 'your_collection'), {
+      //     billData: billData,
+      //   });
+      //   this.message = `Document written with ID: ${docRef.id}`;
+      // } catch (e) {
+      //   this.message = "Error adding document";
+      // }
+      // localStorage.setItem('billData', JSON.stringify(billData));
     },
+    async savePrintData() {
+      const id = uuidv4(); // Generate a unique ID
+      try {
+        await addDoc(collection(this.$db, 'billData'), { // Use this.$db
+          id, // Store the UUID as an ID field
+          name:'BillData',
+          billData: this.billData,
+          users: this.users
+        });
+        this.$router.push(`/bill/print?id=${id}`);
+        // this.$router.push('/bill/print /iwant add id to this url');
+
+      } catch (e) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Server error',
+          text: 'Please try again later',
+        });
+        return;
+      }
+    }
+
   },
   computed: {
     activeUser() {

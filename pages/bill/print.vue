@@ -63,7 +63,13 @@
 
         <div class="py-4 text-center">
           <!-- <button type="button" class="text-white bg-gray-300 hover:bg-gray-600 font-medium rounded-lg text-sm p-5 py-2.5 me-2 mb-2 focus:outline-none w-full">Share</button> -->
-          <button type="button" class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">Copy Link</button>
+          <button
+            type="button"
+            class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800"
+            @click="copyLink"
+          >
+            Copy Link
+          </button>
         </div>
         <div class="bottom-0 left-0 right-0 py-4 text-center">
           <p class="text-gray-600">© 2024 Ziancuks. All rights reserved.</p>
@@ -74,6 +80,7 @@
 </template>
 
 <script>
+import { getDocs, collection, query, where } from 'firebase/firestore'; // Import necessary functions
 import Swal from 'sweetalert2';
 
 export default {
@@ -87,28 +94,65 @@ export default {
       accordionOpen: {},  // Accordion state for each item
     };
   },
-  mounted() {
-    this.loadDataFromLocalStorage();
+  async mounted() {
+    this.loadDataFromFirestore();
   },
   methods: {
-    loadDataFromLocalStorage() {
-      const storedBillData = JSON.parse(localStorage.getItem('billData')) || {};
-      const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-      
-      // Assigning values from billData
-      this.tax = Number(storedBillData.tax) || 0;
-      this.additionalFee = Number(storedBillData.additionalFee) || 0;
-      this.additionalFeeUser = storedBillData.additionalFee 
-      ? Number(storedBillData.additionalFee) / (storedUsers.length || 1) 
-      : 0;
-      this.discount = Number(storedBillData.diskon) || 0;
-      this.otherFees = Number(storedBillData.other) || 0;
+    copyLink() {
+      const url = window.location.href; // Get the current URL
+      navigator.clipboard.writeText(url) // Copy the URL to the clipboard
+        .then(() => {
+          Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Link copied to clipboard!',
+        });
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err);
+        });
+    },
 
-      // Set users
-      this.users = storedUsers.map(user => ({
-        ...user,
-        items: [] // Initialize items for each user
-      }));
+    async loadDataFromFirestore() {
+      // Get the ID from the URL query parameters
+      const id = this.$route.query.id;
+
+      if (!id) {
+        console.error("No ID found in the URL");
+        return;
+      }
+
+      try {
+        // Create a query to filter by the specific ID
+        const q = query(collection(this.$db, 'billData'), where('id', '==', id));
+        const querySnapshot = await getDocs(q);
+        const printData = [];
+
+        querySnapshot.forEach((doc) => {
+          printData.push({ id: doc.id, ...doc.data() });
+        });
+
+        if (printData.length === 0) {
+          console.warn("No documents found with the provided ID.");
+          return
+        }
+        const storedBillData = printData[0].billData || {};
+        const storedUsers = printData[0].users || [];
+
+        // Assigning values from billData
+        this.tax = Number(storedBillData.tax) || 0;
+        this.additionalFee = Number(storedBillData.additionalFee) || 0;
+        this.additionalFeeUser = storedBillData.additionalFee 
+        ? Number(storedBillData.additionalFee) / (storedUsers.length || 1) 
+        : 0;
+        this.discount = Number(storedBillData.diskon) || 0;
+        this.otherFees = Number(storedBillData.other) || 0;
+
+        // Set users
+        this.users = storedUsers.map(user => ({
+          ...user,
+          items: [] // Initialize items for each user
+        })); 
 
       // Populate items for each user based on selectedUsers in rows
       storedBillData.rows.forEach(item => {
@@ -116,6 +160,10 @@ export default {
           this.users[userIndex].items.push(item);
         });
       });
+
+      } catch (error) {
+        console.error("Error fetching document: ", error);
+      }
 
     },
     getUserTotal(userIndex) {
@@ -137,11 +185,6 @@ export default {
       // Calculate tax based on subtotal
       return (this.tax * subtotal) / (this.getTotalWithoutTax() || 1);
     },
-    // getUserTax(userIndex, item) {
-    //   const subtotal = this.getUserTotal(userIndex);
-    //   // Calculate tax based on subtotal
-    //   return (this.tax * subtotal) / (this.getTotalWithoutTax() || 1);
-    // },
     getTotalWithoutTax() {
       let total = 0;
       this.users.forEach(user => {
