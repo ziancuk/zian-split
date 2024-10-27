@@ -1,6 +1,9 @@
 <template>
   <div class="mobile-view flex h-screen bg-customGreen flex-col items-center">
     <div class="w-full bg-white h-full">
+      <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+        <div class="loader"></div> <!-- Add your loading spinner here -->
+      </div>
       <div class="p-6" :style="{ backgroundColor: 'rgb(243 244 246/var(--tw-bg-opacity))!important' }">
         <div class="py-5 flex flex-col">
           <div class="text-xl font-sans font-semibold text-gray-500">TOTAL AMOUNT</div>
@@ -92,6 +95,7 @@ export default {
       discount: 0, // Discount
       otherFees: 0, // Other charges
       accordionOpen: {},  // Accordion state for each item
+      loading: false, // Add this line
     };
   },
   async mounted() {
@@ -123,6 +127,8 @@ export default {
         return;
       }
 
+      this.loading = true; // Start loading
+      
       try {
         // Create a query to filter by the specific ID
         const q = query(collection(this.$db, 'billData'), where('id', '==', id));
@@ -164,7 +170,10 @@ export default {
 
       } catch (error) {
         console.error("Error fetching document: ", error);
-      }
+        this.loading = false; // Stop loading regardless of success or failure
+    } finally {
+      this.loading = false; // Stop loading regardless of success or failure
+    }
 
     },
     getUserTotal(userIndex) {
@@ -240,12 +249,12 @@ export default {
   transition: transform 0.5s ease;
 }
 .loader {
-  border: 4px solid #f3f3f3;
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
   border-radius: 50%;
-  border-top: 4px solid #3498db;
-  width: 40px;
-  height: 40px;
-  animation: spin 2s linear infinite;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {

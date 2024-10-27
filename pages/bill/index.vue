@@ -84,10 +84,10 @@
 
         <!-- Action Buttons -->
         <div class="row">
-          <div class="py-4 grid grid-cols-2 gap-4">
-            <router-link to="/bill/people">
+          <div class="py-4">
+            <!-- <router-link to="/bill/people">
               <button type="button" class="text-white bg-gray-500 hover:bg-gray-900 font-medium rounded-lg text-sm p-5 py-2.5 me-2 mb-2 focus:outline-none w-full">Ubah Bill</button>
-            </router-link>
+            </router-link> -->
             <button @click="saveToLocalStorage" type="button" class="text-white bg-customGreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none w-full hover:bg-green-800">Konfirmasi</button>
           </div>
         </div>
