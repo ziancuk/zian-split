@@ -10,7 +10,7 @@
         <!-- content on body -->
         <div class="flex justify-center items-center p-4">
           <!-- <div class="p-2 bg-gradient-to-b from-[#FEAA42] to-[#F08672]"> -->
-            <img src="/public/images/icon_home.png" alt="Top Image" class="w-[117px] h-[76px] mt-[-50px] mx-auto">
+            <img src="/public/images/icon_home.png" alt="Top Image" class="w-[117px] h-[118px] mt-[-70px] mx-auto">
           <!-- </div> -->
         </div>
         <div class="p-4 text-center">
@@ -25,13 +25,13 @@
         </div>
         <div class="flex justify-content items-center p-3">
           <router-link to="/price">
-            <div class="w-40 h-40 m-4 lex flex-col bg-white rounded-3xl border-[0.2px] flex items-center justify-center hover:bg-gray-200">
+            <div class="w-40 h-40 m-4 lex flex-col bg-white rounded-3xl border-[1px] flex items-center justify-center hover:bg-gray-200">
               <img src="/public/images/icon_price.png" alt="Top Image" class="mx-auto">
               <span class="p-3">Price</span>
             </div>
           </router-link>
           <router-link to="/item">
-            <div class="w-40 h-40 m- lex flex-col 4 bg-white rounded-3xl border-[0.2px] flex items-center justify-center hover:bg-gray-200">
+            <div class="w-40 h-40 m- lex flex-col 4 bg-white rounded-3xl border-[1px] flex items-center justify-center hover:bg-gray-200">
               <img src="/public/images/icon_item.png" alt="Top Image" class="mx-auto">
               <span class="p-3">Item</span>
             </div>

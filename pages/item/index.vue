@@ -114,9 +114,9 @@
                 <!-- Conditionally show the Upload button only if there is a selected image -->
                   <div class="mt-4 flex justify-end">
                     <div v-if="selectedImage">
-                      <router-link to="/bill">
-                        <button class="bg-customGreen text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Upload</button>
-                      </router-link>
+                      <!-- <router-link to="/bill"> -->
+                        <button @click="showAlert" class="bg-customGreen text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Upload</button>
+                      <!-- </router-link> -->
                     </div>
                     <button @click="closeFileModal" class="bg-gray-400 text-white m-1 px-4 py-2 rounded hover:bg-gray-700">Close</button>
                   </div>
@@ -134,6 +134,9 @@
 </template>
   
 <script>
+
+import Swal from 'sweetalert2';
+
 export default {
   data() {
     return {
@@ -175,6 +178,13 @@ export default {
     },
     closeFileModal() {
       this.isFileModalOpen = false;
+    },
+    showAlert() {
+      Swal.fire({
+        icon: 'Warning',
+        title: 'Cooming Soon',
+        text: 'This feature is currently being developed. Stay tuned for updates!',
+      });
     },
     // async startCamera() {
     //   try {
