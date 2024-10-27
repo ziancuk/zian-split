@@ -73,7 +73,7 @@ export default {
     return {
       activeIndex: 0,
       slides: [
-        { title: 'Membuat Pembagian Biaya  <span style="color: #75A488;">Adil</span> dan Makmur', text: 'Split bill memungkinkan setiap orang membayar sesuai dengan pesanannya, sehingga tidak ada yang membayar lebih dari yang seharusnya.s' },
+        { title: 'Membuat Pembagian Biaya  <span style="color: #75A488;">Adil</span> dan Makmur', text: 'Split bill memungkinkan setiap orang membayar sesuai dengan pesanannya, sehingga tidak ada yang membayar lebih dari yang seharusnya.' },
         { title: 'Tanggung Jawab dan <span style="color: #75A488;">Mengingatkan</span> yang mudah lupa', text: 'Split bill tidak hanya membagi biaya secara merata, tetapi juga memungkinkan setiap orang untuk membayar hanya untuk apa yang mereka konsumsi atau gunakan.' },
         { title: 'Dapat Mengurangi <span style="color: #75A488;">Putus Silaturahmi</span> Antar Teman', text: "Cocok untuk teman yang biasa 'Pake uang lu dulu ya, nanti gue bayar. Nah dengan mengirimkan split bill, maka teman akan ingat.'" },
       ],
