@@ -140,7 +140,7 @@ export default {
     },
   },
   mounted() {
-    localStorage.clear();
+    // localStorage.clear();
 
     const savedData = localStorage.getItem('billData');
     if (savedData && savedData != 'undefined') {
