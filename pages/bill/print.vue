@@ -21,7 +21,7 @@
                 <span class="font-sans font-bold text-gray-700">{{ user.name }}</span>
                 <!-- <span class="font-sans font-bold text-gray-700 text-2xl">Rp {{ getUserTotal(userIndex).toLocaleString() }}</span> -->
                 <span class="font-sans font-bold text-gray-700 text-2xl">
-                  Rp {{ userTotals[userIndex].toLocaleString() }}
+                  Rp {{ Math.floor(userTotals[userIndex]).toLocaleString() }}
                 </span>
               </div>
             </div>
