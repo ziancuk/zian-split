@@ -149,8 +149,7 @@ export default {
         // Assigning values from billData
         this.tax = Number(storedBillData.tax) || 0;
         this.additionalFee = Number(storedBillData.additionalFee) || 0;
-        this.additionalFeeUser = storedBillData.additionalFee 
-        ? Number(storedBillData.additionalFee) / (storedUsers.length || 1) 
+        this.additionalFeeUser = storedBillData.additionalFee ? Number(storedBillData.additionalFee) / (storedUsers.length || 1) 
         : 0;
         this.discount = Number(storedBillData.diskon) || 0;
         this.otherFees = Number(storedBillData.other) || 0;
@@ -190,10 +189,12 @@ export default {
     getUserTax(userIndex) {
       
       const subtotal = this.getUserItems(userIndex).reduce((total, item) => {
-        return total + item.quantity * item.price;
+        console.log(item)
+        return total + (item.quantity / item.selectedUsers.length) * item.price;
       }, 0);
       // Calculate tax based on subtotal
-      return (this.tax * subtotal) / (this.getTotalWithoutTax() || 1);
+      return (subtotal + this.additionalFeeUser) * 0.1;
+      // return (this.tax * subtotal) / (this.getTotalWithoutTax() || 1);
     },
     getTotalWithoutTax() {
       let total = 0;
@@ -231,7 +232,8 @@ export default {
         items.forEach(item => {
           userTotal += (item.quantity  / item.selectedUsers.length) * item.price;
         });
-        return userTotal + this.getUserTax(userIndex) + this.additionalFeeUser - this.discount + this.otherFees;
+        return userTotal + ((userTotal + this.additionalFeeUser) * 0.1) + this.additionalFeeUser - this.discount + this.otherFees;
+        // return userTotal + this.getUserTax(userIndex) + this.additionalFeeUser - this.discount + this.otherFees;
       });
     }
   },
